@@ -1,20 +1,17 @@
 import java.util.*;
 class StudentManager{
-    ArrayList<Student> list = new ArrayList<>();
+    TreeMap<String,Student> list = new TreeMap<>();
     public Student idCheck(String oid)
     {
-        for(Student s:list)
+        if (oid==null)
         {
-            if(oid!=null && oid.equals(s.getId()))
-            {
-                return s;
-            }
+            return null;
         }
-        return null;
+        return list.get(oid);
     }
     public boolean addStudent(String id,String name,int age,String course)
     {
-        if(age<=0||name==null||name.isBlank()||course==null||course.isBlank())
+        if(id==null||id.isBlank()||age<=0||name==null||name.isBlank()||course==null||course.isBlank())
         {
             return false;
         }
@@ -22,17 +19,42 @@ class StudentManager{
         if(s==null)
         {
         Student stu = new Student(id, name, age, course);
-        list.add(stu);
+        list.put(id,stu);
         return true;
         }
         return false;
     }
+    public void search_by_name(String sname)
+    {
+        if(sname==null || sname.isBlank())
+        {
+            System.out.println("\nInvalid Name");
+            return;
+        }
+        boolean flag=false;
+        System.out.println("\n\t\tSTUDENT DETAILS\n");
+        System.out.println(" \tID \tNAME \tAGE \tCOURSE\n");
+        for(Student s : list.values())
+        {
+            if(s.getName().equalsIgnoreCase(sname))
+            {
+                System.out.println(s);
+                flag=true;
+            }
+        }
+        if(!flag)
+        {
+            System.out.println("\nName not found");
+        }
+    }
     public void view()
     {
         if(list.isEmpty()){
-            System.out.println("No Student Details Available");
+            System.out.println("Student Details Unavailable");
         return;}
-        for(Student i : list)
+        System.out.println("\n\t\tSTUDENT DETAILS\n");
+        System.out.println(" \tID \tNAME \tAGE \tCOURSE\n");
+        for(Student i : list.values())
         {
             System.out.println(i);
         }
@@ -55,19 +77,15 @@ class StudentManager{
     {
         if(ucourse==null||ucourse.isBlank())
             return false;
-        su.course=ucourse;
+        su.setCourse(ucourse);
         return true;
     }
     public boolean delete(String oid)
     {
-        Iterator<Student> st = list.iterator();
-        while(st.hasNext())
+        if(list.containsKey(oid))
         {
-            Student s=st.next();
-            if(oid.equals(s.getId())){
-            st.remove();
+            list.remove(oid);
             return true;
-            }
         }
         return false;
     }
