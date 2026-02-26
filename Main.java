@@ -153,7 +153,7 @@ class Main {
         }
         else{
         System.out.println("\n\t\tSTUDENT DETAILS\n");
-        System.out.println(" \tID \tNAME \tAGE \tCOURSE\n");
+        System.out.println("\tID \tNAME \tAGE \tCOURSE\n");
         for(Student s : arr)
         {
             System.out.println(s);

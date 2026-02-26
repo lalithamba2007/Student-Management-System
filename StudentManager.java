@@ -1,9 +1,17 @@
 
+import java.io.*;
 import java.util.*;
 
 class StudentManager {
 
     private final Map<String, Student> list = new TreeMap<>();
+
+    private final String fileName = "Student.csv";
+
+    StudentManager()
+    {
+        loadFromFile();
+    }
 
     public Student findById(String oid) {
         if (oid == null) {
@@ -26,6 +34,7 @@ class StudentManager {
                 return false;
             }
             list.put(id.trim(), s);
+            saveToFile();
             return true;
         }
         return false;
@@ -58,6 +67,7 @@ class StudentManager {
         if(stu!=null)
         {
         stu.setName(uname.trim());
+        saveToFile();
         return true;
         }
         return false;
@@ -71,6 +81,7 @@ class StudentManager {
         if(stu!=null)
         {
         stu.setAge(uage);
+        saveToFile();
         return true;
         }
         return false;
@@ -84,6 +95,7 @@ class StudentManager {
         if(stu!=null)
         {
         stu.setCourse(ucourse.trim());
+        saveToFile();
         return true;}
         return false;
     }
@@ -95,8 +107,50 @@ class StudentManager {
         }
         if (list.containsKey(oid.trim())) {
             list.remove(oid.trim());
+            saveToFile();
             return true;
         }
         return false;
+    }
+    public void saveToFile()
+    {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(fileName)))
+        {
+            for(Student stu : list.values())
+            {
+                writer.write(stu.getId()+","+stu.getName()+","+stu.getAge()+","+stu.getCourse());
+                writer.newLine();
+            }
+        }
+        catch(IOException e)
+        {
+            System.out.println("Not Valid");
+        }
+    }
+    public void loadFromFile()
+    {
+        File file = new File(fileName);
+        if(!file.exists())
+        {
+            return;
+        }
+        try(BufferedReader reader = new BufferedReader(new FileReader(fileName)))
+        {
+            String line;
+            while((line=reader.readLine())!=null)
+            {
+                String[] parts = line.split(",");
+                String sid = parts[0].trim();
+                String sname = parts[1].trim();
+                int sage = Integer.parseInt(parts[2].trim());
+                String scourse = parts[3].trim();
+                Student stu = new Student(sid,sname,sage,scourse);
+                list.put(sid,stu);
+            }
+        }
+        catch(IOException e)
+        {
+            System.out.println("Not Valid");
+        }
     }
 }
