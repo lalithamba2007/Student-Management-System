@@ -54,6 +54,22 @@ class StudentManager {
         }
     }
 
+    public List<Student> searchByCourse(String scourse)
+    {
+        List<Student> stu = new ArrayList<>();
+        if(scourse==null || scourse.isBlank())
+        {
+            return stu;
+        }
+        for(Student s : list.values())
+        {
+            if(s.getCourse().equalsIgnoreCase(scourse))
+            {
+                stu.add(s);
+            }
+        } 
+        return Collections.unmodifiableList(stu);
+    }
     public List<Student> view() {
         List<Student> arr = new ArrayList<>(list.values());
         return Collections.unmodifiableList(arr);
@@ -118,16 +134,16 @@ class StudentManager {
         {
             for(Student stu : list.values())
             {
-                writer.write(stu.getId()+","+stu.getName()+","+stu.getAge()+","+stu.getCourse());
+                writer.write(stu.getId()+":"+stu.getName()+":"+stu.getAge()+":"+stu.getCourse());
                 writer.newLine();
             }
         }
         catch(IOException e)
         {
-            System.out.println("Not Valid");
+            System.out.println("File Writer Error "+e.getMessage());
         }
     }
-    public void loadFromFile()
+    public final void loadFromFile()
     {
         File file = new File(fileName);
         if(!file.exists())
@@ -139,18 +155,28 @@ class StudentManager {
             String line;
             while((line=reader.readLine())!=null)
             {
-                String[] parts = line.split(",");
+                String[] parts = line.split(":");
+                if(parts.length!=4)
+                {
+                    continue;
+                }
+                try{
                 String sid = parts[0].trim();
                 String sname = parts[1].trim();
                 int sage = Integer.parseInt(parts[2].trim());
                 String scourse = parts[3].trim();
                 Student stu = new Student(sid,sname,sage,scourse);
                 list.put(sid,stu);
+                }
+                catch(NumberFormatException e)
+                {
+                    continue;
+                }
             }
         }
         catch(IOException e)
         {
-            System.out.println("Not Valid");
+            System.out.println("File Read Error "+e.getMessage());
         }
     }
 }

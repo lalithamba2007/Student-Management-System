@@ -9,7 +9,7 @@ class Main {
         boolean b = true;
         while (b) {
             System.out.println("\n\n\t\tMENU\n");
-            System.out.println("1.AddStudent\n2.View Students\n3.Update Student\n4.Delete Student\n5.Search by ID\n6.Search by name\n7.Exit\n\nSelect any one Choice:");
+            System.out.println("1.AddStudent\n2.View Students\n3.Update Student\n4.Delete Student\n5.Search By ID\n6.Search By Name\n7.Search By Course\n8.Exit\n\nSelect any one Choice:");
             int choice = getIntValid(sc);
             switch (choice) {
                 case 1:
@@ -32,6 +32,9 @@ class Main {
                     searchName(sc, manager);
                     break;
                 case 7:
+                    searchCourse(sc, manager);
+                    break;
+                case 8:
                     System.out.println("Exiting Program...");
                     b = false;
                     break;
@@ -110,7 +113,7 @@ class Main {
                     }
                     break;
                 default:
-                    System.out.println("invalid option");
+                    System.out.println("Invalid Option");
                     break;
             }
     }
@@ -120,7 +123,7 @@ class Main {
         String oid = sc.nextLine().trim();
         boolean resu = manager.deleteById(oid);
         if (resu) {
-            System.out.println("\nDeleted Succesfully");
+            System.out.println("\nDeleted Successfully");
         } else {
             System.out.println("\nFailed to delete ; Enter Valid ID");
         }
@@ -140,10 +143,18 @@ class Main {
     }
 
     public static void searchName(Scanner sc, StudentManager manager) {
-        System.out.println("\nEnter Student name to search:");
+        System.out.println("\nEnter Student Name to Search:");
         String sname = sc.nextLine().trim();
         List<Student> val = manager.searchByName(sname.trim());
         printStudents(val);
+    }
+
+    public static void searchCourse(Scanner sc,StudentManager manager)
+    {
+        System.out.println("\nEnter Course to Search:");
+        String scourse = sc.nextLine().trim();
+        List<Student> stu = manager.searchByCourse(scourse.trim());
+        printStudents(stu);
     }
     public static void printStudents(List<Student> arr)
     {
